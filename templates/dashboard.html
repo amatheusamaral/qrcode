@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h3 class="m-0">Campanhas</h3>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-primary" href="{{ url_for('export_csv') }}">Exportar CSV</a>
+    <a class="btn btn-success" href="{{ url_for('campaign_new') }}">+ Nova campanha</a>
+  </div>
+</div>
+
+<form class="mb-3" method="get">
+  <div class="input-group">
+    <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Buscar por nome ou slug">
+    <button class="btn btn-outline-secondary">Buscar</button>
+  </div>
+</form>
+
+<div class="table-responsive">
+<table class="table align-middle">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Slug</th>
+      <th>Destino atual</th>
+      <th>Cliques</th>
+      <th>Status</th>
+      <th>QR</th>
+      <th class="text-end">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in campaigns %}
+    <tr>
+      <td class="fw-medium">{{ c.name }}</td>
+      <td><code>{{ c.slug }}</code></td>
+      <td class="text-truncate" style="max-width:340px;">
+        <a href="{{ c.current_url }}" target="_blank" rel="noopener">{{ c.current_url }}</a>
+      </td>
+      <td>{{ c.clicks }}</td>
+      <td>{{ "Ativa" if c.active else "Inativa" }}</td>
+      <td>
+        <a class="btn btn-sm btn-outline-primary" href="/qr/{{ c.slug }}" target="_blank" rel="noopener">/qr/{{ c.slug }}</a>
+      </td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-success" href="{{ url_for('campaign_qr', cid=c.id) }}">Baixar QR</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('campaign_history', cid=c.id) }}">Histórico</a>
+        <a class="btn btn-sm btn-primary" href="{{ url_for('campaign_edit', cid=c.id) }}">Editar</a>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="text-center text-secondary py-4">Nenhuma campanha ainda.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

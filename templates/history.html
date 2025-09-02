@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-2">
+  Histórico de alterações — {{ campaign.name }}
+  <small class="text-secondary">(/qr/{{ campaign.slug }})</small>
+</h3>
+<p class="text-secondary">
+  Destino atual:
+  <a href="{{ campaign.current_url }}" target="_blank" rel="noopener">
+    {{ campaign.current_url }}
+  </a>
+</p>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>Quando</th>
+    <th>De</th>
+    <th>Para</th>
+    <th>Por</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for h in campaign.histories %}
+    <tr>
+      <td>{{ h.created_at.strftime('%d/%m/%Y %H:%M') }} UTC</td>
+      <td class="text-break" style="max-width:260px;">{{ h.old_url }}</td>
+      <td class="text-break" style="max-width:260px;">{{ h.new_url }}</td>
+      <td>{{ h.changed_by_id or "-" }}</td>
+      <td class="text-end">
+        <form method="post" action="{{ url_for('campaign_rollback', cid=campaign.id, hid=h.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-sm btn-outline-warning">Restaurar para “De”</button>
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr>
+      <td colspan="5" class="text-center text-secondary">Sem alterações registradas.</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

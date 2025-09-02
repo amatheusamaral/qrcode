@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">{{ "Nova campanha" if mode=="new" else "Editar campanha" }}</h3>
+<form method="post">
+  {{ form.csrf_token }}
+  <div class="row g-3">
+    <div class="col-md-6">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control") }}
+    </div>
+    <div class="col-md-3">
+      {{ form.slug.label(class="form-label") }}
+      <div class="input-group">
+        <span class="input-group-text">/qr/</span>
+        {{ form.slug(class="form-control") }}
+      </div>
+      <div class="form-text">Use minúsculas, números e hífens.</div>
+    </div>
+    <div class="col-md-9">
+      {{ form.current_url.label(class="form-label mt-2") }}
+      {{ form.current_url(class="form-control", placeholder="https://...") }}
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <div class="form-check">
+        {{ form.active(class="form-check-input", id="activeCheck") }}
+        <label for="activeCheck" class="form-check-label">Campanha ativa</label>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4 d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="{{ url_for('dashboard') }}">Cancelar</a>
+    <button class="btn btn-primary">Salvar</button>
+  </div>
+</form>
+{% endblock %}
