@@ -8,4 +8,4 @@ Werkzeug==3.0.3
 qrcode==7.4.2
 pillow==10.4.0
 gunicorn==21.2.0
-psycopg[binary]==3.2.10
+psycopg2-binary
